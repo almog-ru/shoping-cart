@@ -4,15 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var expressHbs = require('express-handlebars');
 var index = require('./routes/index');
-
+var mongoose = require('mongoose');
 
 var app = express();
 
+mongoose.connect('127.0.0.1:27017/shopping');
+
 // view engine setup
+app.engine('.hbs', expressHbs({partialsDir: __dirname + '/views/partials/', extname: '.hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.set('view engine', '.hbs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -23,7 +26,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
